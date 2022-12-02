@@ -42,9 +42,6 @@ public class MultiThreadedSumMatrix implements SumMatrix {
          */
         @Override
         public void run() {
-            // this.res = Arrays.stream(matrix, this.starterPosition , this.starterPosition + nElements)
-            //     .flatMapToDouble(Arrays::stream)
-            //     .sum();
             this.res = Arrays.stream(matrix,starterPosition,this.starterPosition + this.nElements)
                 .mapToDouble(MathUtilities::sumElementsOfArray)
                 .sum();
@@ -95,14 +92,8 @@ public class MultiThreadedSumMatrix implements SumMatrix {
 
     @Override
     public double sum(double[][] matrix) {
-        // Returning the number of elements that every thread has to compute
+        //  Number of elements that every thread has to compute
         final int size = matrix.length / this.nThreads + matrix.length % this.nThreads;
-        /*
-         *  matrix.lenght = 10
-         *  nThreads = 3
-         *  10 / 3 + 10 % 3 =  4
-         *  4 + 4 + 2
-         */
         return IntStream
             .iterate(0, start -> start + size)
             .limit(this.nThreads)
@@ -113,10 +104,8 @@ public class MultiThreadedSumMatrix implements SumMatrix {
             .peek(MultiThreadedSumMatrix::joinUninterruptibly)
             // Getting the result of every worker
             .mapToDouble(SumMatrixWorker::getResult)
-            // Summing all the elements
+            // Summing all the results 
             .sum();
-
-
     }
 
 }
